@@ -1,3 +1,6 @@
 body {background-color: red;}
 
-#footer{color: red;}
+#footer{
+    color: red;
+    background-color:gray;
+}
