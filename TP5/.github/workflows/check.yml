@@ -1,10 +1,14 @@
 name: Ma premiere action
 
-on: [push]
+# L'action se lance sur un push OU une pull request
+on: [push, pull_request]
 
 jobs:
   job_un:
     runs-on: ubuntu-latest
     steps:
+      - name: Recupere le code
+        uses: actions/checkout@v4
+
       - name: Afficher les fichiers
         run: ls -R
