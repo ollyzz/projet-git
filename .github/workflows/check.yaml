@@ -1,0 +1,23 @@
+name: Verif Arborescence
+
+on:
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  job_verification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recupere le code
+        uses: actions/checkout@v4
+
+      - name: Afficher les fichiers (ls) et Vérifier extensions
+        run: |
+          echo "Structure actuelle :"
+          ls -R
+          echo "------------------------------------------"
+          find site -maxdepth 1 -type f ! -name "*.html" ! -name "*.php" | grep . && { echo "ERREUR: Fichier interdit dans site/"; exit 1; } || echo "Dossier site : OK"
+          find site/img -type f ! -name "*.png" ! -name "*.jpg" | grep . && { echo "ERREUR: Fichier interdit dans img/"; exit 1; } || echo "Dossier img : OK"
+          find site/css -type f ! -name "*.css" | grep . && { echo "ERREUR: Fichier interdit dans css/"; exit 1; } || echo "Dossier css : OK"
+          find site/js -type f ! -name "*.js" | grep . && { echo "ERREUR: Fichier interdit dans js/"; exit 1; } || echo "Dossier js : OK"
+          echo "Vérification terminée avec succès !"
