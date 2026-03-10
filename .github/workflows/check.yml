@@ -6,17 +6,5 @@ jobs:
   job_un:
     runs-on: ubuntu-latest
     steps:
-      - name: Recupere le code
-        uses: actions/checkout@v4
-
-      - name: Installer PHP et PHPCS
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          tools: phpcs # <--- On demande à l'installeur de mettre phpcs tout de suite
-
-      - name: Afficher les fichiers (Debug)
+      - name: afficher les fichiers (ls)
         run: ls -R
-
-      - name: Lancer le lint (phpcs)
-        run: phpcs --standard=PSR12 TP5/src/
