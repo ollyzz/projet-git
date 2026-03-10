@@ -1,23 +1,22 @@
-name: Verif Arborescence
+name: Verification lint et arbo
 
-on:
-  pull_request:
-    branches: [ master, main ]
+on: [push, pull_request]
 
 jobs:
-  job_verification:
+  job_un:
     runs-on: ubuntu-latest
     steps:
-      - name: Recupere le code
+      - name: Recupere le code (checkout)
         uses: actions/checkout@v4
 
-      - name: Afficher les fichiers (ls) et Vérifier extensions
-        run: |
-          echo "Structure actuelle :"
-          ls -R
-          echo "------------------------------------------"
-          find site -maxdepth 1 -type f ! -name "*.html" ! -name "*.php" | grep . && { echo "ERREUR: Fichier interdit dans site/"; exit 1; } || echo "Dossier site : OK"
-          find site/img -type f ! -name "*.png" ! -name "*.jpg" | grep . && { echo "ERREUR: Fichier interdit dans img/"; exit 1; } || echo "Dossier img : OK"
-          find site/css -type f ! -name "*.css" | grep . && { echo "ERREUR: Fichier interdit dans css/"; exit 1; } || echo "Dossier css : OK"
-          find site/js -type f ! -name "*.js" | grep . && { echo "ERREUR: Fichier interdit dans js/"; exit 1; } || echo "Dossier js : OK"
-          echo "Vérification terminée avec succès !"
+      - name: Installer PHP et PHPCS
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: phpcs
+
+      - name: Lancer le lint (phpcs)
+        run: phpcs --standard=PSR12 TP5/src/
+
+      - name: Verifier l'arborescence (Script PHP)
+        run: php .github/scripts/verif_arbo.php
