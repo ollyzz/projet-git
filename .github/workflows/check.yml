@@ -6,5 +6,9 @@ jobs:
   job_un:
     runs-on: ubuntu-latest
     steps:
-      - name: afficher les fichiers (ls)
+      - name: afficher les fichiers (avant checkout)
+        run: ls -R
+      - name: Recupere le code (checkout)
+        uses: actions/checkout@v4
+      - name: afficher les fichiers (apres checkout)
         run: ls -R
