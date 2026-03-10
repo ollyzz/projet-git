@@ -1,0 +1,10 @@
+name: Ma premiere action
+
+on: [push]
+
+jobs:
+  job_un:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Afficher les fichiers
+        run: ls -R
