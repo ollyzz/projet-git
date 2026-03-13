@@ -1,4 +1,4 @@
-name: Verification lint et arbo
+name: Verification lint, arbo et tests
 
 on: [push, pull_request]
 
@@ -9,14 +9,18 @@ jobs:
       - name: Recupere le code (checkout)
         uses: actions/checkout@v4
 
-      - name: Installer PHP et PHPCS
+      - name: Installer PHP et Outils
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          tools: phpcs
+          tools: phpcs, phpunit # On ajoute phpunit ici
+          coverage: pcov        # On prépare le moteur pour le futur reporting
 
       - name: Lancer le lint (phpcs)
         run: phpcs --standard=PSR12 TP5/src/
 
       - name: Verifier l'arborescence (Script PHP)
         run: php .github/scripts/verif_arbo.php
+
+      - name: Lancer les tests unitaires
+        run: ./vendor/bin/phpunit TP5/tests
