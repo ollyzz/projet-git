@@ -1,4 +1,4 @@
-name: Validation Totale
+name: Validation avec Rapport HTML
 
 on: [push, pull_request]
 
@@ -14,13 +14,21 @@ jobs:
         with:
           php-version: '8.2'
           tools: phpcs, phpunit
-          coverage: pcov # Nécessaire pour le rapport 100%
+          coverage: pcov # Indispensable pour générer le rapport
 
-      - name: 1. Linter le code (PSR12)
+      - name: 1. Lancer le lint (phpcs)
         run: phpcs --standard=PSR12 TP5/src/
 
       - name: 2. Verifier l'arborescence (Script PHP)
         run: php .github/scripts/verif_arbo.php
 
-      - name: 3. Lancer les tests et afficher le rapport de couverture 100%
-        run: ./vendor/bin/phpunit --coverage-text
+      - name: 3. Lancer les tests et generer le rapport HTML
+        # On crée le dossier 'couverture_html'
+        run: ./vendor/bin/phpunit --coverage-html couverture_html
+
+      - name: 4. Publier le rapport pour le prof (Artifact)
+        # Cette étape permet de télécharger le dossier sur GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-de-couverture
+          path: couverture_html/
