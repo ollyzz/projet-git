@@ -3,12 +3,12 @@
 namespace UPJV;
 
 /**
- * Classe de gestion des dates pour le TD.
+ * Classe de gestion des dates.
  */
 class MesDates
 {
     /**
-     * Renvoie un objet JSON contenant la date de demain.
+     * Retourne la date de demain en JSON.
      *
      * @return string
      */
