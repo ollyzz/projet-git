@@ -3,6 +3,9 @@
 use PHPUnit\Framework\TestCase;
 use UPJV\MesDates;
 
+// AJOUTE CETTE LIGNE ICI (le chemin doit être correct par rapport au fichier de test)
+require_once __DIR__ . '/../src/MesDates.php';
+
 class MesDatesTest extends TestCase
 {
     public function testDemainRenvoieJsonEtBonneDate()
