@@ -1,4 +1,4 @@
-name: Verification lint et arbo
+name: Validation Totale
 
 on: [push, pull_request]
 
@@ -6,17 +6,21 @@ jobs:
   job_un:
     runs-on: ubuntu-latest
     steps:
-      - name: Recupere le code (checkout)
+      - name: Recupere le code
         uses: actions/checkout@v4
 
-      - name: Installer PHP et PHPCS
+      - name: Installer PHP et Outils
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          tools: phpcs
+          tools: phpcs, phpunit
+          coverage: pcov # Nécessaire pour le rapport 100%
 
-      - name: Lancer le lint (phpcs)
+      - name: 1. Linter le code (PSR12)
         run: phpcs --standard=PSR12 TP5/src/
 
-      - name: Verifier l'arborescence (Script PHP)
+      - name: 2. Verifier l'arborescence (Script PHP)
         run: php .github/scripts/verif_arbo.php
+
+      - name: 3. Lancer les tests et afficher le rapport de couverture 100%
+        run: ./vendor/bin/phpunit --coverage-text
