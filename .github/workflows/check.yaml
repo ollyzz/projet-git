@@ -14,20 +14,26 @@ jobs:
         with:
           php-version: '8.2'
           tools: phpcs, phpunit
-          coverage: pcov # Indispensable pour générer le rapport
+          coverage: pcov
+
+      # Etape importante si tu n'as pas envoyé le dossier vendor sur GitHub
+      - name: Installer les dependances (Composer)
+        run: composer install
 
       - name: 1. Lancer le lint (phpcs)
         run: phpcs --standard=PSR12 TP5/src/
 
-      - name: 2. Verifier l'arborescence (Script PHP)
+      - name: 2. Verifier l'arborescence
         run: php .github/scripts/verif_arbo.php
 
       - name: 3. Lancer les tests et generer le rapport HTML
-        # On crée le dossier 'couverture_html'
-        run: ./vendor/bin/phpunit --coverage-html couverture_html
+        # On utilise 'php' devant pour eviter le Permission Denied
+        # On precise bien le dossier TP5/tests
+        run: php ./vendor/bin/phpunit TP5/tests --coverage-html couverture_html
 
-      - name: 4. Publier le rapport pour le prof (Artifact)
-        # Cette étape permet de télécharger le dossier sur GitHub
+      - name: 4. Publier le rapport (Artifact)
+        # On ajoute 'if: always()' pour que le rapport soit envoyé même si un test échoue
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: rapport-de-couverture
