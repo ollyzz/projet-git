@@ -1,0 +1,27 @@
+name: Tests E2E TestCafe
+
+on: [push, pull_request]
+
+jobs:
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Lancer le serveur PHP
+        run: |
+          php -S localhost:8000 -t qualitecode/app &
+          sleep 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Installer TestCafe
+        run: npm install testcafe
+
+      - name: Executer TestCafe
+        run: npx testcafe chrome:headless qualitecode/tests/test_majuscules.js

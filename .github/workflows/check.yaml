@@ -1,40 +1,23 @@
-name: Validation avec Rapport HTML
+name: Qualite PHP (Lint, Arbo, Unit)
 
 on: [push, pull_request]
 
 jobs:
-  job_un:
+  qualite:
     runs-on: ubuntu-latest
     steps:
-      - name: Recupere le code
-        uses: actions/checkout@v4
-
-      - name: Installer PHP et Outils
-        uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
           tools: phpcs, phpunit
           coverage: pcov
 
-      # Etape importante si tu n'as pas envoyé le dossier vendor sur GitHub
-      - name: Installer les dependances (Composer)
-        run: composer install
-
-      - name: 1. Lancer le lint (phpcs)
+      - name: Lancer le lint (PSR12)
         run: phpcs --standard=PSR12 TP5/src/
 
-      - name: 2. Verifier l'arborescence
+      - name: Verifier l'arborescence
         run: php .github/scripts/verif_arbo.php
 
-      - name: 3. Lancer les tests et generer le rapport HTML
-        # On utilise 'php' devant pour eviter le Permission Denied
-        # On precise bien le dossier TP5/tests
-        run: php ./vendor/bin/phpunit TP5/tests --coverage-html couverture_html
-
-      - name: 4. Publier le rapport (Artifact)
-        # On ajoute 'if: always()' pour que le rapport soit envoyé même si un test échoue
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: rapport-de-couverture
-          path: couverture_html/
+      - name: Lancer les tests unitaires (100%)
+        run: ./vendor/bin/phpunit --coverage-text
