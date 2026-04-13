@@ -1,0 +1,33 @@
+name: Tests E2E TestCafe
+
+on: [push, pull_request]
+
+jobs:
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recupere le code
+        uses: actions/checkout@v4
+
+      - name: Installer PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Lancer le serveur PHP local
+        # Le "&" est crucial : il lance le serveur en tâche de fond 
+        # pour que l'action puisse passer à l'étape suivante
+        run: php -S localhost:8000 -t ../../../qualitecode/app &
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Installer TestCafe
+        # On installe TestCafe dans la machine virtuelle
+        run: npm install testcafe
+
+      - name: Executer le test E2E (Headless)
+        # Indispensable : 'chrome:headless' car il n'y a pas d'ecran sur GitHub
+        run: npx testcafe chrome:headless ../../../qualitecode/tests/test_majuscules.js
